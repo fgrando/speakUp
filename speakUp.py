@@ -135,30 +135,26 @@ if __name__ == "__main__":
 	s = SpeakUp(debugMode=False)
 
 	#was a request from web?
-	try:
-		form = cgi.FieldStorage()
-		msg = form.getvalue('msg')
-		if msg != None:
-			print (	"Content-type:text/html\r\n\r\n\
-					<html>\
-						<head><title>speakUp</title></head>\
-						<body> <h2>Message: {}</h2> </body>\
-					</html>".format(msg))
-			s.say(msg)
-			exit(0)
+	form = cgi.FieldStorage()
+	msg = form.getvalue('msg')
+	if msg == None:
+		#if not, user must provide the text to speak
+		parser = argparse.ArgumentParser(description='Command line  and CGI interface to gTTS')
+		parser.add_argument('-m','--msg', help="Text to speak", nargs='?', required=True)
+		parser.add_argument('-v','--verbose', help="Debugging mode", nargs='?', required=False)
 
-	except:
-		pass
+		args = parser.parse_args()
 
-	#if not, user must provide the text to speak
-	parser = argparse.ArgumentParser(description='Command line  and CGI interface to gTTS')
-	parser.add_argument('-m','--msg', help="Text to speak", nargs='?', required=True)
-	parser.add_argument('-v','--verbose', help="Debugging mode", nargs='?', required=False)
+		# if user provided a message
+		if args.msg == None:
+			print("No message provided...")
+		else:
+			s.say(str(args.msg))
 
-	args = parser.parse_args()
-
-	# if user provided a message
-	if args.msg == None:
-		print("No message provided...")
 	else:
-		s.say(str(args.msg))
+		print (	"Content-type:text/html\r\n\r\n\
+				<html>\
+					<head><title>speakUp</title></head>\
+					<body> <h2>Message: {}</h2> </body>\
+				</html>".format(msg))
+		s.say(msg)
