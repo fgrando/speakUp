@@ -1,4 +1,4 @@
-# speakUp v1.0
+# speakUp
 HTTP CGI interface to gTTS (google Text-To-Speak)
 
 You can type the URL directly with the message and it is converted to sound instantaneously! You sounds are kept in a local cache, which is useful when you need the same messages again and again (home automation in my case...)
